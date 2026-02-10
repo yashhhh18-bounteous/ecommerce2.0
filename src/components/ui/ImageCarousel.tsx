@@ -1,4 +1,4 @@
-import React from "react"
+
 
 import carousel1 from "@/assets/carousel_1.avif"
 import carousel2 from "@/assets/carousel_2.avif"
