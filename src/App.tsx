@@ -3,10 +3,21 @@ import { Navbar } from "./components/ui/navbar"
 import { ImageCarousel } from "./components/ui/ImageCarousel"
 import { ProductList } from "./components/ui/ProductList"
 import { ProductPage } from "./components/ui/ProductPage"
+import { CartProvider } from "./context/CartContext"
+import { CartPage } from "./components/ui/CartPage"
+import { WishlistProvider } from "./context/WishlistContext"
+import { WishlistPage } from "./components/ui/WishlistPage"
+
+
+
 
 function App() {
   return (
     <BrowserRouter>
+
+    <CartProvider>
+       <WishlistProvider>
+   
       <div className="flex flex-col min-h-screen">
         <Navbar />
 
@@ -31,9 +42,15 @@ function App() {
             {/* Other pages */}
             <Route path="/features" element={<div>Features Page</div>} />
             <Route path="/pricing" element={<div>Pricing Page</div>} />
+            <Route path="/cart" element={<CartPage />} />
+            <Route path="/wishlist" element={<WishlistPage />} />
+
+
           </Routes>
         </main>
       </div>
+</WishlistProvider>
+       </CartProvider>
     </BrowserRouter>
   )
 }
