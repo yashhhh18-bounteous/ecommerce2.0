@@ -7,6 +7,8 @@ import { CartProvider } from "./context/CartContext"
 import { CartPage } from "./components/ui/CartPage"
 import { WishlistProvider } from "./context/WishlistContext"
 import { WishlistPage } from "./components/ui/WishlistPage"
+import Checkout from "./components/ui/checkout"
+import { OrderHistory } from "./components/ui/OrderHistory"
 
 
 
@@ -50,6 +52,8 @@ function App() {
 
 
             <Route path="/cart" element={<CartPage />} />
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-history" element={<OrderHistory />} />
             <Route path="/wishlist" element={<WishlistPage />} />
 
 

@@ -1,8 +1,11 @@
 import { useContext } from "react"
 import { CartContext } from "../../context/CartContext"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+
+
 
 export function CartPage() {
+  const navigate = useNavigate()
   const cartContext = useContext(CartContext)
   if (!cartContext) return null
 
@@ -96,7 +99,7 @@ export function CartPage() {
             Clear Cart
           </button>
 
-          <button className="bg-blue-600 text-white px-4 py-2 rounded">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={() => navigate("/checkout")}>
             Checkout
           </button>
         </div>

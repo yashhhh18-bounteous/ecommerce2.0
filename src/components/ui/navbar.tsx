@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import { Menu, User, ShoppingCart, Search, Heart } from "lucide-react"
+import { Menu, User, ShoppingCart, Search, Heart, History } from "lucide-react"
 import { useContext } from "react"
 import { CartContext } from "../../context/CartContext"
 import { WishlistContext } from "../../context/WishlistContext"
@@ -89,6 +89,16 @@ export function Navbar() {
             Sign Up/Sign In
           </Link>
 
+          {/* 📋 Order History */}
+          <Link
+            to="/order-history"
+            className="relative text-gray-700 hover:text-blue-600"
+            aria-label="Order History"
+            title="Order History"
+          >
+            <History size={20} />
+          </Link>
+
           {/* ❤️ Wishlist */}
           <Link
             to="/wishlist"
@@ -132,6 +142,9 @@ export function Navbar() {
                   </Link>
                   <Link to="/pricing" className="text-lg font-medium">
                     Pricing
+                  </Link>
+                  <Link to="/order-history" className="text-lg font-medium">
+                    Order History
                   </Link>
                   <Link to="/wishlist" className="text-lg font-medium">
                     Wishlist
