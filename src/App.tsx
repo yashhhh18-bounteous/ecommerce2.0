@@ -7,7 +7,8 @@ import { CartProvider } from "./context/CartContext"
 import { CartPage } from "./components/ui/CartPage"
 import { WishlistProvider } from "./context/WishlistContext"
 import { WishlistPage } from "./components/ui/WishlistPage"
-import Checkout from "./components/ui/checkout"
+import Checkout from "./components/ui/Checkout"
+
 import { OrderHistory } from "./components/ui/OrderHistory"
 
 
