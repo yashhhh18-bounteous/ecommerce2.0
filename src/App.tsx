@@ -11,6 +11,9 @@ import { WishlistPage } from "./components/ui/WishlistPage"
 
 
 
+
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -23,7 +26,7 @@ function App() {
 
         <main className="flex-1 py-6 px-4 md:px-8">
           <Routes>
-            {/* Home page: Carousel + Product List */}
+            
             <Route
               path="/"
               element={
@@ -36,12 +39,16 @@ function App() {
               }
             />
 
-            {/* PDP page */}
+           
+
+
             <Route path="/product/:id" element={<ProductPage />} />
 
-            {/* Other pages */}
+          
             <Route path="/features" element={<div>Features Page</div>} />
             <Route path="/pricing" element={<div>Pricing Page</div>} />
+
+
             <Route path="/cart" element={<CartPage />} />
             <Route path="/wishlist" element={<WishlistPage />} />
 

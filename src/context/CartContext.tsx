@@ -18,7 +18,7 @@ export type CartItem = Product & {
 
 type CartContextType = {
   cart: CartItem[]
-  addToCart: (product: Product) => void
+  addToCart: (product: Product, qty?: number) => void
   removeFromCart: (id: number) => void
   clearCart: () => void
 }
