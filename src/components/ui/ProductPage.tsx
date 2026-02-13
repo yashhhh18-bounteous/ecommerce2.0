@@ -4,6 +4,7 @@ import { Heart } from "lucide-react"
 
 import { CartContext } from "../../context/CartContext"
 import { WishlistContext } from "../../context/WishlistContext"
+import { AuthContext } from "../../context/AuthContext"
 
 type Product = {
   id: number
@@ -19,10 +20,11 @@ export function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const auth = useContext(AuthContext)
   const cartContext = useContext(CartContext)
   const wishlistContext = useContext(WishlistContext)
 
-  if (!cartContext || !wishlistContext) return null
+  if (!cartContext || !wishlistContext || !auth) return null
 
   const { addToCart } = cartContext
   const { addToWishlist, removeFromWishlist, isInWishlist } =
@@ -75,11 +77,15 @@ export function ProductPage() {
             </h1>
 
             <button
-              onClick={() =>
+              onClick={() => {
+                if (!auth.isAuthenticated) {
+                  alert("Please sign in to add items to your wishlist")
+                  return
+                }
                 isWishlisted
                   ? removeFromWishlist(product.id)
                   : addToWishlist(product)
-              }
+              }}
             >
               <Heart
                 size={26}
@@ -103,7 +109,13 @@ export function ProductPage() {
           {/* Add to Cart Button */}
           <button
             className="mt-4 bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700 transition"
-            onClick={() => addToCart(product)}
+            onClick={() => {
+              if (!auth.isAuthenticated) {
+                alert("Please sign in to add items to your cart")
+                return
+              }
+              addToCart(product)
+            }}
           >
             Add to Cart
           </button>

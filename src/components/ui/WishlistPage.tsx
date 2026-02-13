@@ -1,13 +1,28 @@
 import { useContext } from "react"
 import { WishlistContext } from "../../context/WishlistContext"
 import { CartContext } from "../../context/CartContext"
+import { AuthContext } from "../../context/AuthContext"
 import { Link } from "react-router-dom"
 
 export function WishlistPage() {
+  const auth = useContext(AuthContext)
   const wishlistContext = useContext(WishlistContext)
   const cartContext = useContext(CartContext)
 
   if (!wishlistContext || !cartContext) return null
+
+  // Check if user is authenticated
+  if (!auth?.isAuthenticated) {
+    return (
+      <div className="max-w-7xl mx-auto text-center py-10">
+        <h2 className="text-2xl font-bold mb-4">Sign In Required</h2>
+        <p className="text-gray-600 mb-4">Please sign in to view your wishlist.</p>
+        <Link to="/" className="text-blue-600 underline">
+          Go to Home
+        </Link>
+      </div>
+    )
+  }
 
   const { wishlist, removeFromWishlist } = wishlistContext
   const { addToCart } = cartContext

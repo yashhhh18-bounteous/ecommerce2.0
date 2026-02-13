@@ -6,6 +6,7 @@ import { CartContext } from "../../context/CartContext"
 import type { Product as CartProduct } from "../../context/CartContext"
 
 import { WishlistContext } from "../../context/WishlistContext"
+import { AuthContext } from "../../context/AuthContext"
 
 type Product = {
   id: number
@@ -19,6 +20,9 @@ type Product = {
 export function ProductList() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+
+  // Auth
+  const auth = useContext(AuthContext)!
 
   // Cart
   const { addToCart } = useContext(CartContext)!
@@ -58,6 +62,11 @@ export function ProductList() {
               onClick={(e) => {
                 e.preventDefault()
                 e.stopPropagation()
+
+                if (!auth.isAuthenticated) {
+                  alert("Please sign in to add items to your wishlist")
+                  return
+                }
 
                 isWishlisted
                   ? removeFromWishlist(product.id)
@@ -118,7 +127,13 @@ export function ProductList() {
                   {/* 🛒 Add to Cart Button */}
                   <button
                     className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full font-medium text-sm"
-                    onClick={() => addToCart(product as CartProduct)}
+                    onClick={() => {
+                      if (!auth.isAuthenticated) {
+                        alert("Please sign in to add items to your cart")
+                        return
+                      }
+                      addToCart(product as CartProduct)
+                    }}
                   >
                     Add to Cart
                   </button>

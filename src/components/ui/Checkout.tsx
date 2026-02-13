@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Card, CardContent } from "@/components/ui/card"
 import { CartContext } from "../../context/CartContext"
+import { AuthContext } from "../../context/AuthContext"
 
 
 interface FieldErrors {
@@ -31,8 +32,9 @@ export interface Order {
 
 export default function Checkout() {
   const navigate = useNavigate()
+  const auth = useContext(AuthContext)
   const cartContext = useContext(CartContext)
-  const { cart } = cartContext || { cart: [] }
+  const { cart, clearCart } = cartContext || { cart: [], clearCart: () => {} }
 
   const [fullName, setFullName] = useState("")
   const [address, setAddress] = useState("")
@@ -125,13 +127,16 @@ export default function Checkout() {
       total: totalPrice,
     }
 
-    // Save order to localStorage
-    const existingOrders = JSON.parse(localStorage.getItem("orders") || "[]")
-    existingOrders.push(newOrder)
-    localStorage.setItem("orders", JSON.stringify(existingOrders))
+    // Save order to localStorage per user
+    if (auth?.user) {
+      const userOrdersKey = `orders_${auth.user.id}`
+      const existingOrders = JSON.parse(localStorage.getItem(userOrdersKey) || "[]")
+      existingOrders.push(newOrder)
+      localStorage.setItem(userOrdersKey, JSON.stringify(existingOrders))
+    }
 
-    // Clear cart
-    localStorage.removeItem("cart")
+    // Clear cart using context method
+    clearCart()
 
     setOpen(true)
 
@@ -142,6 +147,19 @@ export default function Checkout() {
   }
 
   const hasErrors = Object.values(errors).some((error) => error !== "")
+
+  // Check if user is authenticated
+  if (!auth?.isAuthenticated) {
+    return (
+      <div className="max-w-7xl mx-auto text-center py-10">
+        <h2 className="text-2xl font-bold mb-4">Sign In Required</h2>
+        <p className="text-gray-600 mb-4">Please sign in to proceed with checkout.</p>
+        <Button onClick={() => navigate("/")} className="bg-blue-600 hover:bg-blue-700">
+          Go to Home
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-6">

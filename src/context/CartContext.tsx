@@ -1,7 +1,7 @@
-import { createContext, useState, useEffect } from "react"
+import { createContext, useState, useEffect, useContext } from "react"
 import type { ReactNode } from "react"
+import { AuthContext } from "./AuthContext"
 
-// Product type from API
 export type Product = {
   id: number
   title: string
@@ -11,7 +11,6 @@ export type Product = {
   image: string
 }
 
-// CartItem extends Product with quantity
 export type CartItem = Product & {
   quantity: number
 }
@@ -26,46 +25,55 @@ type CartContextType = {
 export const CartContext = createContext<CartContextType | null>(null)
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const auth = useContext(AuthContext)
+  
   const [cart, setCart] = useState<CartItem[]>(() => {
-    // Initialize from localStorage
-    if (typeof window !== "undefined") {
-      const storedCart = localStorage.getItem("cart")
+    if (typeof window !== "undefined" && auth?.user) {
+      const userCartKey = `cart_${auth.user.id}`
+      const storedCart = localStorage.getItem(userCartKey)
       return storedCart ? JSON.parse(storedCart) : []
     }
     return []
   })
 
   useEffect(() => {
-    // Update localStorage whenever cart changes
-    localStorage.setItem("cart", JSON.stringify(cart))
-  }, [cart])
+    if (auth?.user) {
+      const userCartKey = `cart_${auth.user.id}`
+      const storedCart = localStorage.getItem(userCartKey)
+      setCart(storedCart ? JSON.parse(storedCart) : [])
+    } else {
+      setCart([])
+    }
+  }, [auth?.user])
 
-  // ✅ Add to cart with quantity support
+  useEffect(() => {
+    if (auth?.user) {
+      const userCartKey = `cart_${auth.user.id}`
+      localStorage.setItem(userCartKey, JSON.stringify(cart))
+    }
+  }, [cart, auth?.user])
+
 const addToCart = (product: Product, qty: number = 1) => {
   setCart((prev) => {
     const existing = prev.find((item) => item.id === product.id)
     if (existing) {
-      // Update quantity by qty (can be +1 or -1)
       return prev
         .map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + qty }
             : item
         )
-        .filter((item) => item.quantity > 0) // remove if quantity <= 0
+        .filter((item) => item.quantity > 0)
     }
-    // Only add if qty > 0
     return qty > 0 ? [...prev, { ...product, quantity: qty }] : prev
   })
 }
 
 
-  // ✅ Remove item completely from cart
   const removeFromCart = (id: number) => {
     setCart((prev) => prev.filter((item) => item.id !== id))
   }
 
-  // ✅ Clear entire cart
   const clearCart = () => {
     setCart([])
   }

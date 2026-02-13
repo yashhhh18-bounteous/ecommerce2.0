@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { Link } from "react-router-dom"
 import { ChevronDown, ChevronUp, Package } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { AuthContext } from "../../context/AuthContext"
 
 interface OrderItem {
   id: number
@@ -24,13 +25,35 @@ interface Order {
 }
 
 export function OrderHistory() {
+  const auth = useContext(AuthContext)
   const [orders, setOrders] = useState<Order[]>([])
   const [expandedOrder, setExpandedOrder] = useState<string | null>(null)
 
   useEffect(() => {
-    const savedOrders = JSON.parse(localStorage.getItem("orders") || "[]")
-    setOrders(savedOrders)
-  }, [])
+    // Load orders for current user
+    if (auth?.user) {
+      const userOrdersKey = `orders_${auth.user.id}`
+      const savedOrders = JSON.parse(localStorage.getItem(userOrdersKey) || "[]")
+      setOrders(savedOrders)
+    } else {
+      setOrders([])
+    }
+  }, [auth?.user])
+
+  // Check if user is authenticated
+  if (!auth?.isAuthenticated) {
+    return (
+      <div className="max-w-7xl mx-auto text-center py-10">
+        <h2 className="text-2xl font-bold mb-4">Sign In Required</h2>
+        <p className="text-gray-600 mb-4">Please sign in to view your order history.</p>
+        <Link to="/">
+          <Button className="bg-blue-600 hover:bg-blue-700">
+            Go to Home
+          </Button>
+        </Link>
+      </div>
+    )
+  }
 
   if (orders.length === 0) {
     return (

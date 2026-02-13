@@ -1,15 +1,13 @@
 import { Link } from "react-router-dom"
-import { Menu, User, ShoppingCart, Search, Heart, History } from "lucide-react"
+import { Menu, ShoppingCart, Search, Heart, History } from "lucide-react"
 import { useContext } from "react"
 import { CartContext } from "../../context/CartContext"
 import { WishlistContext } from "../../context/WishlistContext"
+import { AuthDialog } from "./AuthDialog"
 
 import {
   NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 
 import { Button } from "@/components/ui/button"
@@ -40,23 +38,6 @@ export function Navbar() {
           <div className="hidden md:flex">
             <NavigationMenu>
               <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuLink
-                    asChild
-                    className={navigationMenuTriggerStyle()}
-                  >
-                    <Link to="/features">Features</Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-
-                <NavigationMenuItem>
-                  <NavigationMenuLink
-                    asChild
-                    className={navigationMenuTriggerStyle()}
-                  >
-                    <Link to="/pricing">Pricing</Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
           </div>
@@ -81,13 +62,7 @@ export function Navbar() {
         <div className="flex items-center gap-6 min-w-[160px]">
 
           {/* User */}
-          <Link
-            to="/signin"
-            className="flex items-center gap-1 text-blue-600 text-sm font-medium hover:underline"
-          >
-            <User size={18} />
-            Sign Up/Sign In
-          </Link>
+          <AuthDialog />
 
           {/* 📋 Order History */}
           <Link
@@ -137,12 +112,6 @@ export function Navbar() {
               </SheetTrigger>
               <SheetContent side="right">
                 <div className="flex flex-col gap-4 mt-6">
-                  <Link to="/features" className="text-lg font-medium">
-                    Features
-                  </Link>
-                  <Link to="/pricing" className="text-lg font-medium">
-                    Pricing
-                  </Link>
                   <Link to="/order-history" className="text-lg font-medium">
                     Order History
                   </Link>
